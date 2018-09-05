@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -62,6 +64,16 @@ public class AlgamoneyResponseEntityExceptionHandler extends ResponseEntityExcep
 		List<Erro> erros = Arrays.asList(new Erro(msgCliente,msgDev));
 		
 		return  handleExceptionInternal(ex,erros,new HttpHeaders(),HttpStatus.NOT_FOUND,request);
+	}
+	
+	@ExceptionHandler({ConstraintViolationException.class})
+	protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request){
+		String msgCliente = messages.getMessage("mensagem.operacao-nao-realizada", null, LocaleContextHolder.getLocale());
+		String msgDev = ExceptionUtils.getRootCauseMessage(ex);
+		
+		List<Erro> erros = Arrays.asList(new Erro(msgCliente,msgDev));
+		
+		return  handleExceptionInternal(ex,erros,new HttpHeaders(),HttpStatus.BAD_REQUEST,request);
 	}
 	
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {

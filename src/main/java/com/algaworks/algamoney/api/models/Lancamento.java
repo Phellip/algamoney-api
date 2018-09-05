@@ -59,11 +59,13 @@ public class Lancamento {
 	@Setter @Getter
 	private TipoLancamento tipoLancamento;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
 	@Setter @Getter
 	private Categoria categoria;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	@Setter @Getter
