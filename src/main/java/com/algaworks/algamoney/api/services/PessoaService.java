@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.algaworks.algamoney.api.models.Pessoa;
 import com.algaworks.algamoney.api.repositorys.PessoaRepository;
+import com.algaworks.algamoney.api.services.exception.PessoaInexistenteOuInativaException;
 
 @Service
 public class PessoaService {
@@ -70,6 +71,23 @@ public class PessoaService {
 		 }
 		 
 		 return list;
+	}
+
+	/**
+	 * @throws PessoaInexistenteException quando o codigo informado não
+	 * estiver relacionado com alguma pessoa na base de dados.
+	 * */
+	public void verificarAtividade(Long codigo) throws PessoaInexistenteOuInativaException {
+		Long idValidado = Objects.requireNonNull(codigo,"codigo da Pessoa é obrigatório.");
+		Pessoa pessoa = pessoaRepository.findOne(idValidado);
+		
+		if(pessoa == null) {
+			throw new PessoaInexistenteOuInativaException();
+		}
+		
+		if(pessoa.isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
 	}
 	
 }

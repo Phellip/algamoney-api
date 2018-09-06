@@ -7,11 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -42,4 +45,10 @@ public class Pessoa {
 	@Embedded
 	@Setter @Getter
 	private Endereco endereco;
+
+	@Transient
+	@JsonIgnore
+	public boolean isInativo() {
+		return this.ativo == null ? true : !this.ativo;
+	}
 }

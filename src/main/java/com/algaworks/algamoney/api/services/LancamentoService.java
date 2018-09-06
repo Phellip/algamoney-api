@@ -13,9 +13,11 @@ import com.algaworks.algamoney.api.repositorys.LancamentoRepository;
 public class LancamentoService {
 
 	private LancamentoRepository lancamentoRepository;
+	private PessoaService pessoaService;
 	
-	public LancamentoService(LancamentoRepository lancamentoRepository) {
+	public LancamentoService(LancamentoRepository lancamentoRepository, PessoaService pessoaService) {
 		this.lancamentoRepository = lancamentoRepository;
+		this.pessoaService = pessoaService;
 	}
 	
 	public List<Lancamento> consultarLancamentos() {
@@ -38,6 +40,8 @@ public class LancamentoService {
 
 	public Lancamento salvar(Lancamento lancamento) {
 		lancamento = Objects.requireNonNull(lancamento, "Lancamento é obrigatório.");
+		pessoaService.verificarAtividade(lancamento.getPessoa().getCodigo());
+		
 		return lancamentoRepository.save(lancamento);
 	}
 	
