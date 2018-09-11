@@ -40,7 +40,7 @@ public class LancamentoService {
 
 	public Lancamento salvar(Lancamento lancamento) {
 		lancamento = Objects.requireNonNull(lancamento, "Lancamento é obrigatório.");
-		pessoaService.verificarAtividade(lancamento.getPessoa().getCodigo());
+		pessoaService.verificarPessoaExistenteEAtivo(lancamento.getPessoa().getCodigo());
 		
 		return lancamentoRepository.save(lancamento);
 	}

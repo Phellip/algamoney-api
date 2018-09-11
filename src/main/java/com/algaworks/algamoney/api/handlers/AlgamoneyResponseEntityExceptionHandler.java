@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.algaworks.algamoney.api.services.exception.PessoaInexistenteOuInativaException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -75,6 +77,19 @@ public class AlgamoneyResponseEntityExceptionHandler extends ResponseEntityExcep
 		
 		return  handleExceptionInternal(ex,erros,new HttpHeaders(),HttpStatus.BAD_REQUEST,request);
 	}
+	
+	@ExceptionHandler({PessoaInexistenteOuInativaException.class})
+	protected ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex, 
+			WebRequest request){
+		
+		String msgCliente = messages.getMessage("mensagem.operacao-nao-realizada", null, LocaleContextHolder.getLocale());
+		String msgDev = ExceptionUtils.getRootCauseMessage(ex);
+		
+		List<Erro> erros = Arrays.asList(new Erro(msgCliente,msgDev));
+		
+		return  handleExceptionInternal(ex,erros,new HttpHeaders(),HttpStatus.BAD_REQUEST,request);
+	}
+	
 	
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();

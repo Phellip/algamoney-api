@@ -74,19 +74,21 @@ public class PessoaService {
 	}
 
 	/**
-	 * @throws PessoaInexistenteException quando o codigo informado não
-	 * estiver relacionado com alguma pessoa na base de dados.
+	 * @param codigo da pessoa verificada.
+	 * 
+	 * @throws PessoaInexistenteOuInativaException quando o codigo informado não
+	 * estiver relacionado com alguma pessoa na base de dados ou se a pessoa representada 
+	 * estiver inativa.
 	 * */
-	public void verificarAtividade(Long codigo) throws PessoaInexistenteOuInativaException {
-		Long idValidado = Objects.requireNonNull(codigo,"codigo da Pessoa é obrigatório.");
-		Pessoa pessoa = pessoaRepository.findOne(idValidado);
+	public void verificarPessoaExistenteEAtivo(long codigo) throws PessoaInexistenteOuInativaException {
+		Pessoa pessoa = pessoaRepository.findOne(codigo);
 		
 		if(pessoa == null) {
-			throw new PessoaInexistenteOuInativaException();
+			throw new PessoaInexistenteOuInativaException("Não existe uma Pessoa com o codigo informado.");
 		}
 		
 		if(pessoa.isInativo()) {
-			throw new PessoaInexistenteOuInativaException();
+			throw new PessoaInexistenteOuInativaException("A Pessoa esta desativada.");
 		}
 	}
 	
