@@ -45,4 +45,9 @@ public class LancamentoService {
 		
 		return lancamentoRepository.save(lancamento);
 	}
+
+	public void deletarPorCodigo(Long codigo) {
+		codigo = Objects.requireNonNull(codigo, "Codigo do Lancamento é obrigatório.");
+		lancamentoRepository.delete(codigo);
+	}
 }
