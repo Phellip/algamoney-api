@@ -17,7 +17,20 @@ public class PessoaBuilder {
 		
 		return builder;
 	}
+	
+	public static PessoaBuilder umaPessoaExistenteEAtiva() {
+		PessoaBuilder builder  = new PessoaBuilder();
+		builder.pessoa = new Pessoa();
+		builder.pessoa.setAtivo(true);
+		builder.pessoa.setCodigo(1L);
+		return builder;
+	}
 
+	public PessoaBuilder comCodigo(Long codigo) {
+		this.pessoa.setCodigo(codigo);
+		return this;
+	}
+	
 	public Pessoa agora() {
 		return this.pessoa;
 	}

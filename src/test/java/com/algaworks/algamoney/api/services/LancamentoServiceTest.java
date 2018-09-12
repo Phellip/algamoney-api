@@ -11,13 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.algaworks.algamoney.api.builder.LancamentoBuilder;
+import com.algaworks.algamoney.api.builder.PessoaBuilder;
 import com.algaworks.algamoney.api.models.Lancamento;
 import com.algaworks.algamoney.api.repositorys.LancamentoRepository;
 import com.algaworks.algamoney.api.repositorys.filter.LancamentoFilter;
@@ -104,13 +104,56 @@ public class LancamentoServiceTest {
 		service.consultarPorCodigo(1L);
 	}
 
-	@Test @Ignore
+	@Test
 	public void deve_salvar_lancamento() {
 		//cenario
-		Lancamento lancamento = LancamentoBuilder.umLancamento().agora();
+		Lancamento lancamento = LancamentoBuilder.umLancamentoParaSalvar().agora();
+		when(lancamentoRepository.save(lancamento)).thenReturn(lancamento);
+		
+		//execucao
+		Lancamento lancamentoSalvo = service.salvar(lancamento);
+		
+		assertThat(lancamentoSalvo, notNullValue());
+	}
+
+	@Test
+	public void nao_deve_salvar_lancamento_nulo() {
+		//cenario
+		Lancamento lancamento = null;
+		
+		//validacao
+		exception.expect(NullPointerException.class);
+		exception.expectMessage("Lancamento é obrigatório.");
 		
 		//execucao
 		service.salvar(lancamento);
 	}
+	
+	@Test
+	public void nao_deve_salvar_lancamento_com_pessoa_nula() {
+		//cenario
+		Lancamento lancamento = LancamentoBuilder.umLancamento().comPessoa(null).agora();
+	
+		//validacao
+		exception.expect(NullPointerException.class);
+		exception.expectMessage("Pessoa é obrigatório.");
 
+		//execucao
+		service.salvar(lancamento);
+	}
+
+	@Test
+	public void nao_deve_salvar_lancamento_com_categoria_nulo() {
+		//cenario
+		Lancamento lancamento = LancamentoBuilder.umLancamento().comPessoa(PessoaBuilder.umaPessoa().agora())
+				.comCategoria(null).agora();
+		
+		//validacao
+		exception.expect(NullPointerException.class);
+		exception.expectMessage("Categoria é obrigatório.");
+	
+		//execucao
+		service.salvar(lancamento);
+	}
+	
 }

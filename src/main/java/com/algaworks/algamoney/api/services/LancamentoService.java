@@ -40,14 +40,17 @@ public class LancamentoService {
 	}
 
 	public Lancamento salvar(Lancamento lancamento) {
-		lancamento = Objects.requireNonNull(lancamento, "Lancamento é obrigatório.");
+		Objects.requireNonNull(lancamento, "Lancamento é obrigatório.");
+		Objects.requireNonNull(lancamento.getPessoa(), "Pessoa é obrigatório.");
+		Objects.requireNonNull(lancamento.getCategoria(), "Categoria é obrigatório.");
+		
 		pessoaService.verificarPessoaExistenteEAtivo(lancamento.getPessoa().getCodigo());
 		
 		return lancamentoRepository.save(lancamento);
 	}
 
 	public void deletarPorCodigo(Long codigo) {
-		codigo = Objects.requireNonNull(codigo, "Codigo do Lancamento é obrigatório.");
+		Objects.requireNonNull(codigo, "Codigo do Lancamento é obrigatório.");
 		lancamentoRepository.delete(codigo);
 	}
 }
