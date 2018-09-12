@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.algaworks.algamoney.api.models.Lancamento;
 import com.algaworks.algamoney.api.repositorys.LancamentoRepository;
+import com.algaworks.algamoney.api.repositorys.filter.LancamentoFilter;
 
 @Service
 public class LancamentoService {
@@ -20,8 +21,8 @@ public class LancamentoService {
 		this.pessoaService = pessoaService;
 	}
 	
-	public List<Lancamento> consultarLancamentos() {
-		List<Lancamento> list = lancamentoRepository.findAll();
+	public List<Lancamento> consultarLancamentos(LancamentoFilter filter) {
+		List<Lancamento> list = lancamentoRepository.filtrar(filter);
 		if(Objects.isNull(list) || list.isEmpty()) {
 			throw new EmptyResultDataAccessException(Integer.MAX_VALUE);
 		}
@@ -44,5 +45,4 @@ public class LancamentoService {
 		
 		return lancamentoRepository.save(lancamento);
 	}
-	
 }

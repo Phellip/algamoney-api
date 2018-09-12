@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algamoney.api.events.ResourceCreatedEvent;
 import com.algaworks.algamoney.api.models.Lancamento;
+import com.algaworks.algamoney.api.repositorys.filter.LancamentoFilter;
 import com.algaworks.algamoney.api.services.LancamentoService;
 
 @RequestMapping("/lancamentos")
@@ -32,8 +33,8 @@ public class LancamentoResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Lancamento>> listar() {
-		List<Lancamento> lancamentos = lancamentoService.consultarLancamentos();
+	public ResponseEntity<List<Lancamento>> pesquisar(LancamentoFilter filter) {
+		List<Lancamento> lancamentos = lancamentoService.consultarLancamentos(filter);
 		return ResponseEntity.ok(lancamentos);
 	}
 
