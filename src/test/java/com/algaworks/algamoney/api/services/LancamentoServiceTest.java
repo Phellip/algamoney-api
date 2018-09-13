@@ -1,14 +1,9 @@
 package com.algaworks.algamoney.api.services;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,7 +15,6 @@ import com.algaworks.algamoney.api.builder.LancamentoBuilder;
 import com.algaworks.algamoney.api.builder.PessoaBuilder;
 import com.algaworks.algamoney.api.models.Lancamento;
 import com.algaworks.algamoney.api.repositorys.LancamentoRepository;
-import com.algaworks.algamoney.api.repositorys.filter.LancamentoFilter;
 
 public class LancamentoServiceTest {
 
@@ -40,34 +34,6 @@ public class LancamentoServiceTest {
 		lancamentoRepository = mock(LancamentoRepository.class);		
 		
 		service = new LancamentoService(lancamentoRepository, pessoaService);
-	}
-	
-	@Test
-	public void deve_retornar_todos_lancamentos() {
-		//cenario
-		LancamentoFilter filter = new LancamentoFilter();
-		List<Lancamento> todosLancamentos = Arrays.asList(new Lancamento(),new Lancamento());
-		when(lancamentoRepository.filtrar(filter)).thenReturn(todosLancamentos);
-		
-		//execucao
-		List<Lancamento> lancamentos = service.consultarLancamentos(filter);
-		
-		//validacao
-		assertThat(lancamentos, notNullValue());
-		assertThat(lancamentos.isEmpty(), is(false));
-		assertThat(lancamentos.size(), is(2));
-	}
-	
-	@Test
-	public void nao_deve_retornar_lancamentos_inexistentes() {
-		//cenario
-		LancamentoFilter filter = new LancamentoFilter();
-		List<Lancamento> todosLancamentos = new ArrayList<>();
-		when(lancamentoRepository.filtrar(filter)).thenReturn(todosLancamentos);
-	
-		//execucao
-		exception.expect(EmptyResultDataAccessException.class);
-		service.consultarLancamentos(filter);
 	}
 	
 	@Test

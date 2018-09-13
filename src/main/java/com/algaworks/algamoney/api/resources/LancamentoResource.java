@@ -1,11 +1,11 @@
 package com.algaworks.algamoney.api.resources;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,11 +32,10 @@ public class LancamentoResource {
 		this.lancamentoService = lancamentoService;
 		this.publisher = publisher;
 	}
-	
+
 	@GetMapping
-	public ResponseEntity<List<Lancamento>> pesquisar(LancamentoFilter filter) {
-		List<Lancamento> lancamentos = lancamentoService.consultarLancamentos(filter);
-		return ResponseEntity.ok(lancamentos);
+	public Page<Lancamento> pesquisarPaginado(LancamentoFilter filter,Pageable pageable) {
+		return lancamentoService.consultarLancamentos(filter, pageable);
 	}
 
 	@GetMapping("/{codigo:[0-9]+}")

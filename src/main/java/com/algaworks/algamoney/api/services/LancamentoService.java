@@ -1,9 +1,15 @@
 package com.algaworks.algamoney.api.services;
 
-import java.util.List;
+import static com.algaworks.algamoney.api.repositorys.specification.LancamentoSpecification.byDataVencimentoMaiorIgual;
+import static com.algaworks.algamoney.api.repositorys.specification.LancamentoSpecification.byDataVencimentoMenorIgual;
+import static com.algaworks.algamoney.api.repositorys.specification.LancamentoSpecification.byDescricaoLike;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 import java.util.Objects;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algamoney.api.models.Lancamento;
@@ -21,15 +27,13 @@ public class LancamentoService {
 		this.pessoaService = pessoaService;
 	}
 	
-	public List<Lancamento> consultarLancamentos(LancamentoFilter filter) {
-		List<Lancamento> list = lancamentoRepository.filtrar(filter);
-		if(Objects.isNull(list) || list.isEmpty()) {
-			throw new EmptyResultDataAccessException(Integer.MAX_VALUE);
-		}
-		
-		return list;
+	public Page<Lancamento> consultarLancamentos(LancamentoFilter filter,Pageable pageable) {
+		return lancamentoRepository
+				.findAll(where(byDescricaoLike(filter.getDescricao()))
+						.and(byDataVencimentoMaiorIgual(filter.getDataVencimentoDe()))
+						.and(byDataVencimentoMenorIgual(filter.getDataVencimentoAte())), pageable);
 	}
-
+	
 	public Lancamento consultarPorCodigo(Long codigo) {
 		Lancamento lancamento = lancamentoRepository.findOne(codigo);
 		if(Objects.isNull(lancamento)) {
