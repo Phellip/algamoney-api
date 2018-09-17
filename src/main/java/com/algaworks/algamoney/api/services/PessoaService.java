@@ -84,11 +84,11 @@ public class PessoaService {
 		Pessoa pessoa = pessoaRepository.findOne(codigo);
 		
 		if(pessoa == null) {
-			throw new PessoaInexistenteOuInativaException("Não existe uma Pessoa com o codigo informado.");
+			throw new PessoaInexistenteOuInativaException("lancamento.pessoa-inexistente");
 		}
 		
 		if(pessoa.isInativo()) {
-			throw new PessoaInexistenteOuInativaException("A Pessoa esta desativada.");
+			throw new PessoaInexistenteOuInativaException("lancamento.pessoa-inativa");
 		}
 	}
 	
