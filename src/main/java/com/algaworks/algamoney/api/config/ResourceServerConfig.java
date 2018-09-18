@@ -30,8 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/categorias").permitAll()
-				.anyRequest().permitAll()
-				//.anyRequest().authenticated()
+				.anyRequest().authenticated()
 			.and()
 		.httpBasic().and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
