@@ -34,7 +34,7 @@ public class LancamentoBuilder {
 		builder.lancamento.setDescricao("Descrição Lancamento Mock");
 		builder.lancamento.setTipoLancamento(TipoLancamento.RECEITA);
 		builder.lancamento.setValor(new BigDecimal("1.000"));
-		builder.lancamento.setPessoa(PessoaBuilder.umaPessoaExistenteEAtiva().agora());
+		builder.lancamento.setPessoa(PessoaBuilder.umaPessoa().comCodigo(1L).agora());
 		builder.lancamento.setCategoria(CategoriaBuilder.umaCategoria().agora());
 		
 		return builder;

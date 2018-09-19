@@ -1,6 +1,7 @@
 package com.algaworks.algamoney.api.resources;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -50,37 +51,28 @@ public class PessoaResource {
 	public ResponseEntity<Void> salvar(@RequestBody @Valid Pessoa pessoa, 
 			HttpServletResponse response) {
 		
-		Pessoa pessoaSave = pessoaService.salvar(pessoa);
+		Pessoa pessoaSave = pessoaService.salvar(Optional.of(pessoa));
 		
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, pessoaSave.getCodigo()));
 		
-		return ResponseEntity
-				.status(HttpStatus.CREATED)
-				.build();
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Void> atualizar(@PathVariable Long codigo, @RequestBody @Valid Pessoa pessoa) {
 		pessoaService.atualizarCompleto(codigo, pessoa);
-
-		return ResponseEntity
-				.noContent()
-				.build();
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PatchMapping("/{codigo}/ativo")
 	public ResponseEntity<Void> atualizarAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
 		pessoaService.atualizarPropriedade(ativo, codigo);
-		return ResponseEntity
-				.noContent()
-				.build();
+		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/{codigo}")
 	public ResponseEntity<Void> deletar(@PathVariable Long codigo) {
 		pessoaService.deletarPorCodigo(codigo);
-		return ResponseEntity
-				.noContent()
-				.build();
+		return ResponseEntity.noContent().build();
 	}
 }

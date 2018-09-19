@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,13 +20,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.algaworks.algamoney.api.builder.LancamentoBuilder;
 import com.algaworks.algamoney.api.builder.PessoaBuilder;
 import com.algaworks.algamoney.api.models.Categoria;
 import com.algaworks.algamoney.api.models.Lancamento;
 import com.algaworks.algamoney.api.repositorys.LancamentoRepository;
+import com.algaworks.algamoney.api.repositorys.filter.LancamentoFilter;
 
 public class LancamentoServiceTest {
 
@@ -48,6 +57,39 @@ public class LancamentoServiceTest {
 		lancamentoRepository = mock(LancamentoRepository.class);		
 		
 		service = new LancamentoService(lancamentoRepository, pessoaService);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void nao_deve_retornar_lancamentos_inexistente() {
+		//cenario
+		LancamentoFilter filter = new LancamentoFilter();
+		Pageable page = new PageRequest(0, 20);
+		when(lancamentoRepository.findAll(Mockito.any(Specification.class), Mockito.any(Pageable.class)))
+		.thenReturn(new PageImpl<>(new ArrayList<Lancamento>()));
+		
+		//validacao
+		exception.expect(EmptyResultDataAccessException.class);
+		
+		//execucao
+		service.consultarLancamentos(filter, page);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void deve_retornar_lancamentos_filtrados() {
+		//cenario
+		LancamentoFilter filter = new LancamentoFilter();
+		Pageable pageable = new PageRequest(0, 20);
+		when(lancamentoRepository.findAll(Mockito.any(Specification.class), Mockito.any(Pageable.class)))
+		.thenReturn(new PageImpl<>(Arrays.asList(new Lancamento())));
+		
+		//execucao
+		Page<Lancamento> page = service.consultarLancamentos(filter, pageable);
+		
+		//verificacao
+		error.checkThat(page, notNullValue());	
+		error.checkThat(page.getTotalElements(), is(1L));
 	}
 	
 	@Test
@@ -149,4 +191,27 @@ public class LancamentoServiceTest {
 		}
 	}
 	
+	@Test
+	public void nao_deve_deletar_com_codigo_nulo() {
+		//cenario
+		Optional<Long> codigoOptional = Optional.ofNullable(null);
+		
+		
+		exception.expect(IllegalArgumentException.class);
+		
+		//execucao
+		service.deletarPorCodigo(codigoOptional);
+	}
+	
+	@Test
+	public void deve_deletar() {
+		//cenario
+		Optional<Long> codigoOptional = Optional.ofNullable(100L);
+		
+		//execucao
+		service.deletarPorCodigo(codigoOptional);
+	
+		//verificacao
+		Mockito.verify(lancamentoRepository).delete(codigoOptional.get());
+	}
 }

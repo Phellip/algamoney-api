@@ -2,6 +2,7 @@ package com.algaworks.algamoney.api.services;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.algaworks.algamoney.api.models.Pessoa;
 import com.algaworks.algamoney.api.repositorys.PessoaRepository;
 import com.algaworks.algamoney.api.services.exception.PessoaInexistenteOuInativaException;
+import com.algaworks.algamoney.api.util.BeanValidationUtil;
 
 @Service
 public class PessoaService {
@@ -20,10 +22,12 @@ public class PessoaService {
 	@Autowired
 	public PessoaService(PessoaRepository pessoaRepository) {
 		this.pessoaRepository = pessoaRepository;
-		
 	}
 	
-	public Pessoa salvar(Pessoa pessoa) {
+	public Pessoa salvar(Optional<Pessoa> pessoaOptional) {
+		Pessoa pessoa = pessoaOptional.orElseThrow(IllegalArgumentException::new);
+		BeanValidationUtil.validateOrThrowConstraintException(pessoaOptional.get());
+		
 		return pessoaRepository.save(pessoa);
 	}
 	
