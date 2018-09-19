@@ -1,5 +1,7 @@
 package com.algaworks.algamoney.api.resources;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -38,15 +40,15 @@ public class LancamentoResource {
 		return lancamentoService.consultarLancamentos(filter, pageable);
 	}
 
-	@GetMapping("/{codigo:[0-9]+}")
-	public ResponseEntity<Lancamento> listarPorCodigo(@PathVariable Long codigo) {
+	@GetMapping("/{codigo}")
+	public ResponseEntity<Lancamento> listarPorCodigo(@PathVariable Optional<Long> codigo) {
 		Lancamento lancamento = lancamentoService.consultarPorCodigo(codigo);
 		return ResponseEntity.ok(lancamento);
 	}
 	
 	@PostMapping
 	public ResponseEntity<Lancamento> salvar(@RequestBody @Valid Lancamento lancamento, HttpServletResponse response) {
-		Lancamento lancamentoSalvo = lancamentoService.salvar(lancamento);
+		Lancamento lancamentoSalvo = lancamentoService.salvar(Optional.of(lancamento));
 		
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, lancamentoSalvo.getCodigo()));
 		
@@ -56,8 +58,8 @@ public class LancamentoResource {
 	}
 
 	@DeleteMapping("/{codigo}")
-	public ResponseEntity<Void> deletar(@PathVariable Long codigo) {
-		lancamentoService.deletarPorCodigo(codigo);
+	public ResponseEntity<Void> deletar(@PathVariable Optional<Long> codigoOptional) {
+		lancamentoService.deletarPorCodigo(codigoOptional);
 		return ResponseEntity.noContent().build();
 	}
 }

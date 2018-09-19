@@ -1,8 +1,12 @@
 package com.algaworks.algamoney.api.builder;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import com.algaworks.algamoney.api.models.Categoria;
 import com.algaworks.algamoney.api.models.Lancamento;
 import com.algaworks.algamoney.api.models.Pessoa;
+import com.algaworks.algamoney.api.models.TipoLancamento;
 
 public class LancamentoBuilder {
 
@@ -15,14 +19,24 @@ public class LancamentoBuilder {
 	public static LancamentoBuilder umLancamento() {
 		LancamentoBuilder builder = new LancamentoBuilder();
 		builder.lancamento = new Lancamento();
+		builder.lancamento.setDataVencimento(LocalDate.now());
+		builder.lancamento.setDescricao("Descrição Lancamento Mock");
+		builder.lancamento.setTipoLancamento(TipoLancamento.RECEITA);
+		builder.lancamento.setValor(new BigDecimal("1.000"));
+		
 		return builder;
 	}
 	
 	public static LancamentoBuilder umLancamentoParaSalvar() {
 		LancamentoBuilder builder = new LancamentoBuilder();
 		builder.lancamento = new Lancamento();
+		builder.lancamento.setDataVencimento(LocalDate.now());
+		builder.lancamento.setDescricao("Descrição Lancamento Mock");
+		builder.lancamento.setTipoLancamento(TipoLancamento.RECEITA);
+		builder.lancamento.setValor(new BigDecimal("1.000"));
 		builder.lancamento.setPessoa(PessoaBuilder.umaPessoaExistenteEAtiva().agora());
 		builder.lancamento.setCategoria(CategoriaBuilder.umaCategoria().agora());
+		
 		return builder;
 	}
 	

@@ -5,7 +5,7 @@ import static com.algaworks.algamoney.api.repositorys.specification.LancamentoSp
 import static com.algaworks.algamoney.api.repositorys.specification.LancamentoSpecification.byDescricaoLike;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.algaworks.algamoney.api.models.Lancamento;
 import com.algaworks.algamoney.api.repositorys.LancamentoRepository;
 import com.algaworks.algamoney.api.repositorys.filter.LancamentoFilter;
+import com.algaworks.algamoney.api.util.BeanValidationUtil;
 
 @Service
 public class LancamentoService {
@@ -34,27 +35,28 @@ public class LancamentoService {
 						.and(byDataVencimentoMenorIgual(filter.getDataVencimentoAte())), pageable);
 	}
 	
-	public Lancamento consultarPorCodigo(Long codigo) {
-		Lancamento lancamento = lancamentoRepository.findOne(codigo);
-		if(Objects.isNull(lancamento)) {
+	public Lancamento consultarPorCodigo(Optional<Long> optionalCodigo) {
+		Long codigo = optionalCodigo.orElseThrow(IllegalArgumentException::new);
+		
+		Optional<Lancamento> lancamentoOptional = Optional.ofNullable(lancamentoRepository.findOne(codigo));
+		
+		if(!lancamentoOptional.isPresent()) {
 			throw new EmptyResultDataAccessException(1);
 		}
 		
-		return lancamento;
+		return lancamentoOptional.get();
 	}
 
-	public Lancamento salvar(Lancamento lancamento) {
-		Objects.requireNonNull(lancamento, "Lancamento é obrigatório.");
-		Objects.requireNonNull(lancamento.getPessoa(), "Pessoa é obrigatório.");
-		Objects.requireNonNull(lancamento.getCategoria(), "Categoria é obrigatório.");
-		
+	public Lancamento salvar(Optional<Lancamento> lancamentoOptional) {
+		Lancamento lancamento = lancamentoOptional.orElseThrow(IllegalArgumentException::new);
+		BeanValidationUtil.validateOrThrowConstraintException(lancamento);
 		pessoaService.verificarPessoaExistenteEAtivo(lancamento.getPessoa().getCodigo());
 		
 		return lancamentoRepository.save(lancamento);
 	}
 
-	public void deletarPorCodigo(Long codigo) {
-		Objects.requireNonNull(codigo, "Codigo do Lancamento é obrigatório.");
+	public void deletarPorCodigo(Optional<Long> codigoOptional) {
+		Long codigo = codigoOptional.orElseThrow(IllegalArgumentException::new);
 		lancamentoRepository.delete(codigo);
 	}
 }
