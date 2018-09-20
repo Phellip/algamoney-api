@@ -16,6 +16,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+	private static int TEMPO_VIDA_ACESS_TOKEN_EM_SEGUNDOS = 20;
+	private static int TEMPO_VIDA_REFRESH_TOKEN_EM_SEGUNDOS = 3600 * 24;
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
@@ -25,15 +28,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.withClient("angular")
 		.secret("@angular0")
 		.scopes("read","write")
-		.authorizedGrantTypes("password")
-		.accessTokenValiditySeconds(1800);
+		.authorizedGrantTypes("password", "refresh_token")
+		.accessTokenValiditySeconds(TEMPO_VIDA_ACESS_TOKEN_EM_SEGUNDOS)
+		.refreshTokenValiditySeconds(TEMPO_VIDA_REFRESH_TOKEN_EM_SEGUNDOS);
 	}
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore())
-		.accessTokenConverter(acecessTokenConverter())
-		.authenticationManager(authenticationManager);
+		endpoints
+			.tokenStore(tokenStore())
+			.accessTokenConverter(acecessTokenConverter())
+			.reuseRefreshTokens(false)
+			.authenticationManager(authenticationManager);
 	}
 
 	@Bean
