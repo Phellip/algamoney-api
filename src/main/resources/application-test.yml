@@ -1,0 +1,15 @@
+#Configurações do Spring
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE 
+    username: sa
+    password: 
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql:true
+
+#Desabilitar o flyway no profile de teste
+flyway:
+  enabled: false

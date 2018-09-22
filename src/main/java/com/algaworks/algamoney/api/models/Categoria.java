@@ -11,10 +11,12 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="categoria")
+@NoArgsConstructor
 @EqualsAndHashCode(of= {"codigo"})
 public class Categoria {
 	
@@ -26,4 +28,8 @@ public class Categoria {
 	@Size(min=3,max=20)
 	@Setter @Getter
 	private String nome;
+	
+	public Categoria(String nome) {
+		this.nome = nome;
+	}
 }

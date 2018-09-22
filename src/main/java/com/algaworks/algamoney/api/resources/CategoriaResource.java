@@ -35,7 +35,7 @@ public class CategoriaResource {
 	
 	@GetMapping
 	public ResponseEntity<List<Categoria>> listar() {
-		 List<Categoria> list = categoriaService.consultarCategorias();
+		List<Categoria> list = categoriaService.consultarCategorias();
 		return ResponseEntity.ok(list);
 	}
 	

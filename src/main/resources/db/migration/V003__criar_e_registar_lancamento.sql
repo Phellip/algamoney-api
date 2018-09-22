@@ -12,7 +12,5 @@ CREATE TABLE lancamento(
 	FOREIGN KEY (codigo_pessoa) REFERENCES pessoa(codigo)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO lancamento (descricao,data_vencimento,valor,tipo,codigo_categoria,codigo_pessoa) VALUES ('Bolacha','2018-08-10',3.20,'DESPESA',2,4); 
-INSERT INTO lancamento (descricao,data_vencimento,valor,tipo,codigo_categoria,codigo_pessoa) VALUES ('Compra','2018-08-20',1200.84,'DESPESA',3,4); 
 
 
