@@ -1,5 +1,5 @@
 CREATE TABLE pessoa (
-	codigo BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	codigo BIGINT(20) NOT NULL AUTO_INCREMENT,
 	nome VARCHAR(60) NOT NULL,
 	ativo TINYINT,
 	logradouro VARCHAR(60) NOT NULL,
@@ -8,7 +8,8 @@ CREATE TABLE pessoa (
 	bairro VARCHAR(60) NOT NULL,
 	cep VARCHAR(20) NOT NULL,
 	cidade VARCHAR(30) NOT NULL,
-	estado VARCHAR(30) NOT NULL  
+	estado VARCHAR(30) NOT NULL,
+	CONSTRAINT pk_pessoa PRIMARY KEY(codigo)  
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO pessoa 
@@ -27,4 +28,4 @@ INSERT INTO pessoa
 (nome,logradouro,numero,bairro,cep,cidade,estado)
 VALUES
 ('Vera Nina Carvalho','Rua da União','783'
-,'Vitória','69901749','Rio Branco','AC');  
+,'Vitória','69901749','Rio Branco','AC'); 
